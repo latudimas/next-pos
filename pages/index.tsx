@@ -1,15 +1,24 @@
+import { ReactElement } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 
-import Sidebar from '../components/sidebar'
+import { NextPageWithLayout } from './_app'
+import SidebarLayout from '@components/layouts'
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
   return (
     <>
-      <Sidebar />
+      <h1>This is indexpage</h1>
     </>
+  )
+}
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <SidebarLayout>
+      {page}
+    </SidebarLayout>
   )
 }
 
