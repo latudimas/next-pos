@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String    
+  firstName String
+  lastName  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          Int               @id @default(autoincrement())
+  barcode     String            @db.VarChar
+  productName String
+  category    ProductCategory?  @relation(fields: [categoryId], references: [id])
+  categoryId  Int?             
+  unit        ProductUnit?      @relation(fields: [unitId], references: [id])
+  unitId      Int?              
+  stock       ProductStock?     
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  transaction Transaction[]
+
+  @@unique([id, barcode])
+}
+
+model ProductStock {
+  id              Int     @id @default(autoincrement())  
+  product         Product @relation(fields: [productId, productBarcode], references: [id, barcode])
+  productId       Int    
+  productBarcode  String  
+  quantity        Int
+
+  @@unique([productId, productBarcode])
+}
+
+model ProductCategory {
+  id            Int       @id @default(autoincrement())
+  categoryName  String    @unique
+  products      Product[]
+}
+
+model ProductUnit {
+  id        Int       @id @default(autoincrement())
+  unitName  String    @unique
+  products  Product[]
+}
+
+// Detail of transaction (invoices)
+model TransactionDetail {
+  id                Int @id @default(autoincrement())
+  transactions      Transaction[]
+  totalCheckoutItem Int
+  checkoutAmount    BigInt
+  paidAmount        BigInt
+  changeAmount      BigInt
+  paymentMethod     PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId   Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// historical item transactions
+model Transaction {
+  id                  Int @id @default(autoincrement())
+  transactionDetail   TransactionDetail @relation(fields: [transactionDetailId], references: [id])
+  transactionDetailId Int
+  product             Product @relation(fields: [productId], references: [id])
+  productId           Int     
+  quantity            Int
+  totalAmount         BigInt
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model PaymentMethod {
+  id  Int @id @default(autoincrement())
+  paymentMethodName String @unique
+  transactiondetail TransactionDetail[]
+}
