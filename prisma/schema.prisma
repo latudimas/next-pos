@@ -19,8 +19,8 @@ model User {
 
 model Product {
   id          Int               @id @default(autoincrement())
-  barcode     String            @db.VarChar
-  productName String
+  barcode     String            @db.VarChar @unique
+  productName String            
   category    ProductCategory?  @relation(fields: [categoryId], references: [id])
   categoryId  Int?             
   unit        ProductUnit?      @relation(fields: [unitId], references: [id])
@@ -29,18 +29,13 @@ model Product {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   transaction Transaction[]
-
-  @@unique([id, barcode])
 }
 
 model ProductStock {
   id              Int     @id @default(autoincrement())  
-  product         Product @relation(fields: [productId, productBarcode], references: [id, barcode])
-  productId       Int    
-  productBarcode  String  
+  product         Product @relation(fields: [productBarcode], references: [barcode])  
+  productBarcode  String  @unique  
   quantity        Int
-
-  @@unique([productId, productBarcode])
 }
 
 model ProductCategory {

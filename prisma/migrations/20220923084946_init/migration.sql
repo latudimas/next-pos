@@ -27,7 +27,6 @@ CREATE TABLE "Product" (
 -- CreateTable
 CREATE TABLE "ProductStock" (
     "id" SERIAL NOT NULL,
-    "productId" INTEGER NOT NULL,
     "productBarcode" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
 
@@ -89,10 +88,10 @@ CREATE TABLE "PaymentMethod" (
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Product_id_barcode_key" ON "Product"("id", "barcode");
+CREATE UNIQUE INDEX "Product_barcode_key" ON "Product"("barcode");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProductStock_productId_productBarcode_key" ON "ProductStock"("productId", "productBarcode");
+CREATE UNIQUE INDEX "ProductStock_productBarcode_key" ON "ProductStock"("productBarcode");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProductCategory_categoryName_key" ON "ProductCategory"("categoryName");
@@ -110,7 +109,7 @@ ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("cat
 ALTER TABLE "Product" ADD CONSTRAINT "Product_unitId_fkey" FOREIGN KEY ("unitId") REFERENCES "ProductUnit"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductStock" ADD CONSTRAINT "ProductStock_productId_productBarcode_fkey" FOREIGN KEY ("productId", "productBarcode") REFERENCES "Product"("id", "barcode") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ProductStock" ADD CONSTRAINT "ProductStock_productBarcode_fkey" FOREIGN KEY ("productBarcode") REFERENCES "Product"("barcode") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TransactionDetail" ADD CONSTRAINT "TransactionDetail_paymentMethodId_fkey" FOREIGN KEY ("paymentMethodId") REFERENCES "PaymentMethod"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

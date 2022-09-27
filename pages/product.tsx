@@ -1,4 +1,4 @@
-import SidebarLayout from "@components/layouts/SidebarLayout"
+import SidebarLayout from "@components/layouts"
 import { ReactElement } from "react"
 
 export default function Product() {
