@@ -22,8 +22,8 @@ export const createApiRoute = createApiRouteCreator({
   },
   handleError(req, res, error) {
     if (typeof error === "string") {
-      return res.status(400).send({ message:'===QWS===' + error })
+      return res.status(400).send({ message: error })
     }
-    res.status(400).send({ message: "====Something went wrong!====" })
+    res.status(400).send({ message: "Something went wrong!" })
   }
 })
