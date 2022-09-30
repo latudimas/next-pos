@@ -8,14 +8,14 @@ export default createApiRoute({
     const response = await ctx.productService.getProductByBarcode(barcode as string)
     
     if (response == null) {
-      res.status(200).json({
+      return res.status(200).json({
         status: res.statusCode,
         data: null,
         message: RESPONSE_MESSAGE.NOT_FOUND
       })
     }
     
-    res.status(200).json({
+    return res.status(200).json({
       status: res.statusCode,
       data: response,
       message: RESPONSE_MESSAGE.SUCCESS

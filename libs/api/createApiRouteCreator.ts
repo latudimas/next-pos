@@ -21,13 +21,15 @@ export function createApiRouteCreator<Context>(
   return function createApiRoute(options: CreateApiRouteArgs<Context>) {
     return async function handler(req: Req, res: Res) {
       try {
-        /**
-         * The nullish coalescing operator (??) enables us to specify a fallback for when a value is undefined or null
-         *  */
         const middleware = [
-          ...(args.middleware ?? []),
+          ...(args.middleware ?? []), // The nullish coalescing operator (??) enables us to specify a fallback for when a value is undefined or null
           ...(options.middleware ?? []),
         ];
+
+        for await( const mw of middleware) {
+          await mw(req, res)
+        }
+
         const context = args.createContext(req, res);
         const _method = req.method?.toLowerCase();
 
