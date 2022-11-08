@@ -5,7 +5,9 @@ import { createApiRouteCreator } from './createApiRouteCreator'
 import * as ProductService from '@services/product'
 import initMiddleware from './initMiddleware'
 
+// Cors middleware
 const corsMiddleware = initMiddleware(cors())
+// Logger middleware
 const loggerMiddleware = async(req: Req) => {
   console.log("Incoming", req.method, "request")
 }
