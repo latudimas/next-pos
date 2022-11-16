@@ -11,6 +11,7 @@ type CreateApiRouteCreatorArgs<Context> = {
 type CreateApiRouteArgs<Context> = {
   [method in AllowedMethod]?: (req: Req, res: Res, ctx: Context) => any;
 } & {
+  // include any local middleware if any
   middleware?: Array<(req: Req, res: Res) => Promise<void>>;
 };
 
@@ -25,8 +26,8 @@ export function createApiRouteCreator<Context>(
           ...(options.middleware ?? []),
         ];
 
-        for await(const mw of middleware) {
-          await mw(req, res)
+        for await(const mdw of middleware) {
+          await mdw(req, res)
         }
 
         const context = args.createContext(req, res);
