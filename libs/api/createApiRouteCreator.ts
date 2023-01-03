@@ -9,6 +9,7 @@ type CreateApiRouteCreatorArgs<Context> = {
 };
 
 type CreateApiRouteArgs<Context> = {
+  // using property accessor to get value from createRouteApi (get, pos, put, etc)
   [method in AllowedMethod]?: (req: Req, res: Res, ctx: Context) => any;
 } & {
   // include any local middleware if any

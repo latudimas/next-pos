@@ -2,17 +2,25 @@ import cors from 'cors'
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next'
 
 import { createApiRouteCreator } from './createApiRouteCreator'
-import * as ProductService from '@services/product'
 import initMiddleware from './initMiddleware'
-import logger from '@libs/logger'
+import { createWinstonLogger } from '@libs/logger'
+import { createDbConnection } from '@libs/database'
+import { productService } from '@services/product'
 
-// Cors middleware
+// Logger initiation
+const logger = createWinstonLogger()
+// Db initiation
+const dbConnection = createDbConnection()
+dbConnection.connect()
+// Service initiation
+const productServiceObject = productService(logger, dbConnection)
+// Cors middleware initiation
 const corsMiddleware = initMiddleware(cors())
 // Logger middleware
 const loggerMiddleware = async({ method, url, query, body }: Req) => {
   let queryString = JSON.stringify(query)
   let bodyString = JSON.stringify(body)
-  logger.info(`${method} ${url} query: ${queryString} body: ${bodyString}`)
+  logger.log('info', `${method} ${url} query: ${queryString} body: ${bodyString}`)
 }
 
 export const createApiRoute = createApiRouteCreator({
@@ -22,7 +30,8 @@ export const createApiRoute = createApiRouteCreator({
   },
   createContext() {
     return {
-      productService: ProductService
+      productService: productServiceObject,
+      logger: logger
     }
   },
   handleError(req, res, error) {
