@@ -16,9 +16,12 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@components/*": ["components/*"]
+      "@root/*": ["./*"],
+      "@components/*": ["components/*"],
+      "@services/*": ["services/*"],
+      "@libs/*": ["libs/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "domain/productServiceInterface.ts.test"],
   "exclude": ["node_modules"]
 }
