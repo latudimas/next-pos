@@ -27,18 +27,3 @@ export const createWinstonLogger = (): Logger => {
 
   return { log }
 }
-
-//##############################
-// export const devLogger = () => {
-//   return createLogger({
-//     level: "debug",
-//     format: combine(
-//       format.colorize(),
-//       timestamp(),
-//       logFormat
-//     ),
-//     transports: [new transports.Console()]
-//   })
-// }
-
-// export default devLogger
