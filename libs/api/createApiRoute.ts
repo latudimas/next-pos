@@ -5,7 +5,10 @@ import { createApiRouteCreator } from './createApiRouteCreator'
 import initMiddleware from './initMiddleware'
 import { createWinstonLogger } from '@libs/logger'
 import { createDbConnection } from '@libs/database'
-import { productService } from '@services/product'
+import { 
+  productService,
+  categoryService 
+} from '@services/product'
 
 // Logger initiation
 const logger = createWinstonLogger()
@@ -14,6 +17,7 @@ const dbConnection = createDbConnection()
 dbConnection.connect()
 // Service initiation
 const productServiceObject = productService(logger, dbConnection)
+const categoryServiceObject = categoryService(logger, dbConnection)
 // Cors middleware initiation
 const corsMiddleware = initMiddleware(cors())
 // Logger middleware
@@ -31,6 +35,7 @@ export const createApiRoute = createApiRouteCreator({
   createContext() {
     return {
       productService: productServiceObject,
+      categoryService: categoryServiceObject,
       logger: logger
     }
   },

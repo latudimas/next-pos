@@ -14,8 +14,9 @@ export default createApiRoute({
         message: RESPONSE_MESSAGE.NOT_FOUND
       })
     }
-    // ctx.logger.info(`code: 200 response:${response} `)
+
     ctx.logger.log('info', `code: 200 response:${response} `)
+
     return res.status(200).json({
       status: res.statusCode,
       data: response,
