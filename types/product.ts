@@ -6,7 +6,6 @@ export type ProductForm = {
 }
 
 export type ProductStock = {
-  productId: number
   productBarcode: string
   quantity: number
 }
