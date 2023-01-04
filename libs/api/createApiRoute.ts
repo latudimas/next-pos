@@ -7,7 +7,8 @@ import { createWinstonLogger } from '@libs/logger'
 import { createDbConnection } from '@libs/database'
 import { 
   productService,
-  categoryService 
+  categoryService,
+  unitService
 } from '@services/product'
 
 // Logger initiation
@@ -18,6 +19,7 @@ dbConnection.connect()
 // Service initiation
 const productServiceObject = productService(logger, dbConnection)
 const categoryServiceObject = categoryService(logger, dbConnection)
+const unitServiceObject = unitService(logger, dbConnection)
 // Cors middleware initiation
 const corsMiddleware = initMiddleware(cors())
 // Logger middleware
@@ -36,6 +38,7 @@ export const createApiRoute = createApiRouteCreator({
     return {
       productService: productServiceObject,
       categoryService: categoryServiceObject,
+      unitService: unitServiceObject,
       logger: logger
     }
   },
