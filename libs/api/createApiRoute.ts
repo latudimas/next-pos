@@ -8,7 +8,8 @@ import { createDbConnection } from '@libs/database'
 import { 
   productService,
   categoryService,
-  unitService
+  unitService,
+  stockService
 } from '@services/product'
 
 // Logger initiation
@@ -20,6 +21,7 @@ dbConnection.connect()
 const productServiceObject = productService(logger, dbConnection)
 const categoryServiceObject = categoryService(logger, dbConnection)
 const unitServiceObject = unitService(logger, dbConnection)
+const stockServiceObject = stockService(logger, dbConnection)
 // Cors middleware initiation
 const corsMiddleware = initMiddleware(cors())
 // Logger middleware
@@ -39,6 +41,7 @@ export const createApiRoute = createApiRouteCreator({
       productService: productServiceObject,
       categoryService: categoryServiceObject,
       unitService: unitServiceObject,
+      stockService: stockServiceObject,
       logger: logger
     }
   },
