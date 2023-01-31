@@ -19,6 +19,22 @@ export const productService = (logger: Logger, dbConnection: DbConnection) => {
     }
   }
 
+  const getAllProduct = async (limit: number, offset: number) => {
+    try {
+      logger.log('info', `[SERVICE] get all product`)
+      const data = await productDb.findMany({
+        skip: offset,
+        take: limit,
+        orderBy: {
+          id: 'asc'}
+      })
+      return data
+    } catch (error) {
+      logger.log('error', `[SERVICE] Error when get all product: ${error}`)
+      throw new Error('Error when get all product')
+    }
+  }
+
   const getProductByBarcode = async (barcode: string) => {
     try {
       const product = await productDb.findFirst({
@@ -66,6 +82,7 @@ export const productService = (logger: Logger, dbConnection: DbConnection) => {
 
   return {
     insertProduct,
+    getAllProduct,
     getProductByBarcode,
     updateProduct,
     deleteProduct

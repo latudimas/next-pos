@@ -22,5 +22,26 @@ export default createApiRoute({
       data: response,
       message: RESPONSE_MESSAGE.SUCCESS
     })
+  },
+  //GET all product
+  async get(req,res, ctx) {
+    const { limit = 10, offset = 0 } = req.query
+    const response = await ctx.productService.getAllProduct(Number(limit), Number(offset))
+
+    if (response == null) {
+      ctx.logger.log('info', `Code: 500 Message: Get all product failed`)
+      return res.status(500).json({
+        status: res.statusCode,
+        data: null,
+        message: RESPONSE_MESSAGE.FAILED
+      })
+    }
+
+    ctx.logger.log('info', `code: 200 response:${response} `)
+    return res.status(200).json({
+      status: res.statusCode,
+      data: response,
+      message: RESPONSE_MESSAGE.SUCCESS
+    })
   }
 })
