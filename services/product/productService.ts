@@ -19,16 +19,21 @@ export const productService = (logger: Logger, dbConnection: DbConnection) => {
     }
   }
 
-  const getAllProduct = async (limit: number, offset: number) => {
+  const getAllProduct = async (limit: number, offset: number, keyword: string | undefined) => {
     try {
       logger.log('info', `[SERVICE] get all product`)
       const data = await productDb.findMany({
         skip: offset,
         take: limit,
+        where: {
+          productName: {
+            search: keyword,
+          },
+        },
         orderBy: {
           id: 'asc'}
       })
-      return data
+        return data
     } catch (error) {
       logger.log('error', `[SERVICE] Error when get all product: ${error}`)
       throw new Error('Error when get all product')

@@ -25,8 +25,17 @@ export default createApiRoute({
   },
   //GET all product
   async get(req,res, ctx) {
-    const { limit = 10, offset = 0 } = req.query
-    const response = await ctx.productService.getAllProduct(Number(limit), Number(offset))
+    const { limit = 10, offset = 0, keyword } = req.query
+    
+    // keyword typeguard because req.query had union type of string | string [] | undefined
+    let searchKeyword: string | undefined
+    if (typeof keyword === 'string') {
+      searchKeyword = keyword
+    } else {
+      searchKeyword = undefined
+    }
+
+    const response = await ctx.productService.getAllProduct(Number(limit), Number(offset), searchKeyword)
 
     if (response == null) {
       ctx.logger.log('info', `Code: 500 Message: Get all product failed`)
