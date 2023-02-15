@@ -19,7 +19,7 @@ export const productService = (logger: Logger, dbConnection: DbConnection) => {
     }
   }
 
-  const getAllProduct = async (limit: number, offset: number, keyword: string | undefined) => {
+  const getProductsByName = async (limit: number, offset: number, keyword: string | undefined) => {
     try {
       logger.log('info', `[SERVICE] get all product`)
       const data = await productDb.findMany({
@@ -33,7 +33,25 @@ export const productService = (logger: Logger, dbConnection: DbConnection) => {
         orderBy: {
           id: 'asc'}
       })
-        return data
+      return data
+    } catch (error) {
+      logger.log('error', `[SERVICE] Error when get all product: ${error}`)
+      throw new Error('Error when get all product')
+    }
+  }
+
+  // Query for counting total result for paginated api
+  const getProductCountByName = async (keyword: string | undefined) => {
+    try {
+      logger.log('info', `[SERVICE] get all product`)
+      const dataCount = await productDb.count({
+        where: {
+          productName: {
+            search: keyword,
+          }
+        }
+      })
+      return dataCount
     } catch (error) {
       logger.log('error', `[SERVICE] Error when get all product: ${error}`)
       throw new Error('Error when get all product')
@@ -87,8 +105,9 @@ export const productService = (logger: Logger, dbConnection: DbConnection) => {
 
   return {
     insertProduct,
-    getAllProduct,
+    getProductsByName,
     getProductByBarcode,
+    getProductCountByName,
     updateProduct,
     deleteProduct
   }
