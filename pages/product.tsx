@@ -1,54 +1,75 @@
-import SidebarLayout from "@components/layouts"
 import { 
   useState,
   useEffect, 
-  ReactElement 
+  ReactElement, 
+  ReactNode
 } from "react"
-import useSWR from 'swr'
+import { GetStaticProps, InferGetStaticPropsType } from "next"
 
 import { NextPageWithLayout } from './_app'
+import SidebarLayout from "@components/layouts"
 
-const Product: NextPageWithLayout = () => {
-  // const [data, setData] = useState(null)
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const productApiUrl = 'https://dummyjson.com/products/1'
-  //     const response = await fetch(productApiUrl)
-  //     const responseJson = await response.json()
-  //     setData(responseJson)
-  //   }
-  //   fetchData()
-  // }, [])
-  // if (!data) return <h2>Loading...</h2>
+interface Product {
+  id: number;
+  productName: string;
+  barcode: string;
+  category: string;
+  unit: string;
+}
 
-  const productApiUrl = 'http://localhost:3000/api/product/12345'
-  const fetcher = (url: string) => fetch(url).then(res => res.json())
-  const { data, error, isLoading } = useSWR(productApiUrl, fetcher)
+// export default function Product({data}: InferGetStaticPropsType<typeof getStaticProps>): NextPageWithLayout {
+const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  // TODO: handle if request is failed, error, or data not available
+  const [list, setList] = useState<Product[]>(data?.data ?? [])
 
-  if (error) return <p>Loading failed....</p>
-  // if (!data) return <h1>Loading...</h1>
-  if (isLoading) return <h2>Loading...</h2>
+  useEffect(() => {
+    setList(data?.data ?? [])
+  }, [data])
 
+  // Todo: styling the table (or possibly create table component) also create an input form for accept params
   return (
     <div>
-      <div className="container">
-      <p>Product page</p>
-        {/* <div className="details">
-          <p>Id: {data.data.id}</p>
-          <p>Barcode: {data.data.barcode}</p>
-          <p>Product Name: {data.data.productName}</p>
-          <p>Category Id: {data.data.categoryId}</p>
-          <p>Unit Id: {data.data.unitId}</p>
-          <p>Created at: {data.data.createdAt}</p>
-          <p>Updated at: {data.data.updatedAt}</p>
-        </div> */}
-        {JSON.stringify(data)}
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Barcode</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Unit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {list.map((item: Product) => 
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.barcode}</td>
+              <td>{item.productName}</td>
+              <td>{item.category}</td>
+              <td>{item.unit}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   )
 }
 
-Product.getLayout = function getLayout(page: ReactElement) {
+export const getStaticProps: GetStaticProps = async () => {
+  // Todo: using input to get params from user
+  const productApiUrl = 'http://localhost:3000/api/product?limit=20&page=1&search=product'
+
+  const response = await fetch(productApiUrl)
+  const data = await response.json()
+
+  return {
+    props: {
+      data
+    }
+  }
+}
+
+Product.getLayout = function getLayout(page: ReactElement): ReactNode {
   return (
     <SidebarLayout>
       {page}
