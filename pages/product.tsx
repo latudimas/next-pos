@@ -7,7 +7,7 @@ import {
 import { GetStaticProps, InferGetStaticPropsType } from "next"
 
 import { NextPageWithLayout } from './_app'
-import SidebarLayout from "@components/layouts"
+import { SidebarLayout } from "@root/components"
 
 interface Product {
   id: number;

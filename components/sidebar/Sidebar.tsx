@@ -13,7 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
-export default function Sidebar() {
+export const Sidebar = () => {
   const [collapseShow, setCollapseShow] = useState("hidden");
   const router = useRouter();
 

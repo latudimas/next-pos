@@ -1,1 +1,1 @@
-export { default } from './SidebarLayout'
+export { SidebarLayout } from './SidebarLayout'
