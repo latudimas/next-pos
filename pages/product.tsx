@@ -19,46 +19,74 @@ interface Product {
 
 // export default function Product({data}: InferGetStaticPropsType<typeof getStaticProps>): NextPageWithLayout {
 const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  // TODO: handle if request is failed, error, or data not available
-  const [list, setList] = useState<Product[]>(data?.data ?? [])
+  const [searchInput, setSearchInput] = useState('')
+  const [products, setProducts] = useState<Product[]>(data?.data ?? [])
 
-  useEffect(() => {
-    setList(data?.data ?? [])
-  }, [data])
+  const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const productApiUrl = `http://localhost:3000/api/product?&search=${searchInput}`
+    try {
+      const response = await (await fetch(productApiUrl)).json()
+      setProducts(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  // Todo: styling the table (or possibly create table component) also create an input form for accept params
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value)
+  }
+
   return (
     <div>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Barcode</th>
-            <th>Product Name</th>
-            <th>Category</th>
-            <th>Unit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {list.map((item: Product) => 
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.barcode}</td>
-              <td>{item.productName}</td>
-              <td>{item.category}</td>
-              <td>{item.unit}</td>
+      <div>
+        <h1>Products</h1>
+        <form className="px-4 py-4" onSubmit={handleSearchSubmit}>
+          <input 
+            className="px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            type="text"
+            placeholder="Search"
+            value={searchInput}
+            onChange={handleSearchChange}
+          />
+          <button 
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-lg"
+            type="submit">Search
+          </button>
+        </form>
+      </div>
+      <div>
+        <table className="table-auto w-full">
+          <thead>
+            <tr className="bg-gray-200 text-black border-red-600">
+              <th>No.</th>
+              <th>ID</th>
+              <th>Barcode</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Unit</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((item: Product, index: number) => 
+              <tr key={item.id} className="text-center">
+                <td>{index + 1}</td>
+                <td>{item.id}</td>
+                <td>{item.barcode}</td>
+                <td>{item.productName}</td>
+                <td>{item.category}</td>
+                <td>{item.unit}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
-
+  
 export const getStaticProps: GetStaticProps = async () => {
-  // Todo: using input to get params from user
-  const productApiUrl = 'http://localhost:3000/api/product?limit=20&page=1&search=product'
-
+  const productApiUrl = `http://localhost:3000/api/product`
   const response = await fetch(productApiUrl)
   const data = await response.json()
 
