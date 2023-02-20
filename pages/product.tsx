@@ -58,7 +58,7 @@ const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getS
       <div>
         <table className="table-auto w-full">
           <thead>
-            <tr className="bg-gray-200 text-black border-red-600">
+            <tr className="bg-gray-200 text-black">
               <th>No.</th>
               <th>ID</th>
               <th>Barcode</th>
