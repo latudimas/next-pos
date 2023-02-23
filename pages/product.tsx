@@ -1,13 +1,11 @@
-import { 
+import React, { 
   useState,
-  useEffect, 
   ReactElement, 
-  ReactNode
+  ReactNode,
 } from "react"
 import { GetStaticProps, InferGetStaticPropsType } from "next"
-
 import { NextPageWithLayout } from './_app'
-import { SidebarLayout } from "@root/components"
+import { SidebarLayout, Pagination } from "@root/components"
 
 interface Product {
   id: number;
@@ -17,24 +15,46 @@ interface Product {
   unit: string;
 }
 
-// export default function Product({data}: InferGetStaticPropsType<typeof getStaticProps>): NextPageWithLayout {
+interface PageInfo {
+  currentPage: number,
+  pageSize: number,
+  totalItems: number,
+  totalPages: number
+}
+
+const BASE_URL = process.env.POS_API_BASE_URL
+
 const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [searchInput, setSearchInput] = useState('')
   const [products, setProducts] = useState<Product[]>(data?.data ?? [])
+  const [pageInfo, setPageInfo] = useState<PageInfo>(data?.pageInfo)
 
-  const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const productApiUrl = `http://localhost:3000/api/product?&search=${searchInput}`
+  const fetchProducts = async (page: number, search?: string): Promise<void> => {
+    const productApiUrl = `${BASE_URL}/product?page=${page}&search=${search}`
     try {
-      const response = await (await fetch(productApiUrl)).json()
-      setProducts(response.data)
+      const response = await fetch(productApiUrl)
+      const data = await response.json()
+      setProducts(data?.data ?? [])
+      setPageInfo(data?.pageInfo ?? {})
     } catch (error) {
       console.log(error)
     }
   }
 
+  const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    await fetchProducts(1, searchInput) // Make sure to start from page 1
+    setSearchInput('') // Cleanup the search box
+  }
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value)
+  }
+  
+  const handlePageChange = async (page: number) => {
+    if (page !== pageInfo.currentPage) {
+      await fetchProducts(page, searchInput)
+    }
   }
 
   return (
@@ -81,12 +101,17 @@ const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getS
           </tbody>
         </table>
       </div>
+        <Pagination
+          totalPages={pageInfo.totalPages}
+          currentPage={pageInfo.currentPage}
+          onPageChange={handlePageChange}
+        />
     </div>
   )
 }
   
 export const getStaticProps: GetStaticProps = async () => {
-  const productApiUrl = `http://localhost:3000/api/product`
+  const productApiUrl = `${BASE_URL}/product`
   const response = await fetch(productApiUrl)
   const data = await response.json()
 
