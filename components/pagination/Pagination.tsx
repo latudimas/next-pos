@@ -9,21 +9,6 @@ export const Pagination = ({ totalPages, currentPage, onPageChange }: Props) => 
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
-  //TODO: Make it display horizontally
-  // return (
-  //   <div>
-  //     <ul>
-  //       {pages. map((page) => (
-  //         <li key={page}>
-  //           <a onClick={() => onPageChange(page)}>
-  //             {page}
-  //           </a>
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   </div>
-  // )
-
   return (
     <div className="flex space-x-2">
       {pages.map((page) => (
