@@ -22,7 +22,7 @@ interface PageInfo {
   totalPages: number
 }
 
-const BASE_URL = process.env.POS_API_BASE_URL
+const BASE_URL = process.env.POS_API_BASE_URL || "http://localhost:3000/api"
 
 const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [searchInput, setSearchInput] = useState('')
@@ -52,6 +52,8 @@ const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getS
   }
   
   const handlePageChange = async (page: number) => {
+    console.log(`URL => ${BASE_URL}`)
+    console.log(`PENCET=> ${page}`)
     if (page !== pageInfo.currentPage) {
       await fetchProducts(page, searchInput)
     }
