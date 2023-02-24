@@ -21,7 +21,7 @@ export const Table: React.FC<TableProps> = ({ columns, data }) => {
   return (
     <table className="table-auto w-full">
       <thead>
-        <tr>
+        <tr className="bg-blue-200 text-black">
           {columns.map((column) => (
             <th 
               className="border" 
