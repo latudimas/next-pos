@@ -10,7 +10,7 @@ export const Pagination = ({ totalPages, currentPage, onPageChange }: Props) => 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   return (
-    <div className="flex space-x-2">
+    <div className="flex space-x-2 px-4 py-2">
       {pages.map((page) => (
         <a
           key={page}

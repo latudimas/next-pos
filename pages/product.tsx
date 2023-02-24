@@ -5,7 +5,7 @@ import React, {
 } from "react"
 import { GetStaticProps, InferGetStaticPropsType } from "next"
 import { NextPageWithLayout } from './_app'
-import { SidebarLayout, Pagination } from "@root/components"
+import { SidebarLayout, Pagination, Table } from "@root/components"
 
 interface Product {
   id: number;
@@ -21,6 +21,21 @@ interface PageInfo {
   totalItems: number,
   totalPages: number
 }
+
+//TODO: Create file type for reusability
+interface Column {
+  key: string
+  label: string
+}
+
+const tableColumns: Column[] = [
+  {key: "number", label: "No."},
+  {key: "id", label: "ID"},
+  {key: "barcode", label: "Barcode"},
+  {key: "productName", label: "Product Name"},
+  {key: "category", label: "Category"},
+  {key: "unit", label: "Unit"},
+]
 
 const BASE_URL = process.env.POS_API_BASE_URL || "http://localhost:3000/api"
 
@@ -44,7 +59,7 @@ const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getS
   const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     await fetchProducts(1, searchInput) // Make sure to start from page 1
-    setSearchInput('') // Cleanup the search box
+    // setSearchInput('') // Cleanup the search box //TODO [optional] Handling cleanup searchbox
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,31 +92,11 @@ const Product: NextPageWithLayout = ({data}: InferGetStaticPropsType<typeof getS
           </button>
         </form>
       </div>
-      <div>
-        <table className="table-auto w-full">
-          <thead>
-            <tr className="bg-gray-200 text-black">
-              <th>No.</th>
-              <th>ID</th>
-              <th>Barcode</th>
-              <th>Product Name</th>
-              <th>Category</th>
-              <th>Unit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((item: Product, index: number) => 
-              <tr key={item.id} className="text-center">
-                <td>{index + 1}</td>
-                <td>{item.id}</td>
-                <td>{item.barcode}</td>
-                <td>{item.productName}</td>
-                <td>{item.category}</td>
-                <td>{item.unit}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="px-8 py-8">
+        <Table 
+          columns={tableColumns}
+          data={products}
+        />
       </div>
         <Pagination
           totalPages={pageInfo.totalPages}
