@@ -19,6 +19,15 @@ export const categoryService = (logger: Logger, dbConnection: DbConnection) => {
     }
   }
 
+  const getAllCategory = async() => {
+    try {
+      const categories = await categoryDb.findMany()
+      return categories
+    } catch (error) {
+      logger.log('error', 'Error when get all category')
+    }
+  }
+
   const getCategoryById = async(id: number) => {
     try{
       const category = await categoryDb.findFirst({
@@ -69,6 +78,7 @@ export const categoryService = (logger: Logger, dbConnection: DbConnection) => {
 
   return {
     insertCategory,
+    getAllCategory,
     getCategoryById,
     updateCategory,
     deleteCategory

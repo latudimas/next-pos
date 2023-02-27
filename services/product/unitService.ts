@@ -19,6 +19,15 @@ export const unitService = (logger: Logger, dbConnection: DbConnection) => {
     }
   }
 
+  const getAllUnit = async() => {
+    try {
+      const units = await unitDb.findMany()
+      return units
+    } catch (error) {
+      logger.log('error', 'Error when get all unit')
+    }
+  }
+
   const getUnitById = async(id: number) => {
     try{
       const unit = await unitDb.findFirst({
@@ -69,6 +78,7 @@ export const unitService = (logger: Logger, dbConnection: DbConnection) => {
 
   return {
     insertUnit,
+    getAllUnit,
     getUnitById,
     updateUnit,
     deleteUnit

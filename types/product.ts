@@ -1,4 +1,4 @@
-export type ProductForm = {
+export type ProductFormInput = {
   barcode: string
   productName: string
   categoryId?: number
@@ -11,9 +11,11 @@ export type ProductStock = {
 }
 
 export type ProductCategory = {
+  id: number
   categoryName: string
 }
 
 export type ProductUnit = {
+  id: number
   unitName: string
 }

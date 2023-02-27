@@ -1,11 +1,11 @@
 import { Logger } from '@libs/logger'
 import { DbConnection } from '@libs/database'
-import { ProductForm } from '@root/types'
+import { ProductFormInput } from '@root/types'
 
 export const productService = (logger: Logger, dbConnection: DbConnection) => {
   const productDb = dbConnection.getConnection().product
 
-  const insertProduct = async (product: ProductForm) => {
+  const insertProduct = async (product: ProductFormInput) => {
     try {
       logger.log('info', `[SERVICE] Insert product: ${JSON.stringify(product)}`)
       return await productDb.create({
@@ -74,7 +74,7 @@ export const productService = (logger: Logger, dbConnection: DbConnection) => {
     
   }
 
-  const updateProduct = async (barcode: string, product: ProductForm) => {
+  const updateProduct = async (barcode: string, product: ProductFormInput) => {
     try {
       return await productDb.update({
         where: {

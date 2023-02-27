@@ -18,6 +18,7 @@ model User {
   updatedAt DateTime  @updatedAt
 }
 
+//TODO add Product price 
 model Product {
   id          Int               @id @default(autoincrement())
   barcode     String            @db.VarChar @unique
