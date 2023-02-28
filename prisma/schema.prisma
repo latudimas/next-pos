@@ -23,6 +23,7 @@ model Product {
   id          Int               @id @default(autoincrement())
   barcode     String            @db.VarChar @unique
   productName String            
+  price       Int
   category    ProductCategory?  @relation(fields: [categoryId], references: [id])
   categoryId  Int?             
   unit        ProductUnit?      @relation(fields: [unitId], references: [id])
@@ -73,6 +74,7 @@ model Transaction {
   transactionDetailId Int
   product             Product @relation(fields: [productId], references: [id])
   productId           Int     
+  price               Int
   quantity            Int
   totalAmount         BigInt
   createdAt           DateTime @default(now())
